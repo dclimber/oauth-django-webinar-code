@@ -127,6 +127,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Fixtures
+FIXTURE_DIRS = [BASE_DIR / 'fixtures']
+
 # DRF settings for OAuth2
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
