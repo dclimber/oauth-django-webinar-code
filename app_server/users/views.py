@@ -1,6 +1,7 @@
 import logging
 
 import requests
+
 from decouple import config
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -18,11 +19,11 @@ logger = logging.getLogger('django.server')
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
-    '''
+    """
     Registers user to the server. Input should be in the format:
     {"username": "username", "password": "1234abcd"}
-    '''
-    # Put the data from the request into the serializer 
+    """
+    # Put the data from the request into the serializer
     serializer = CreateUserSerializer(data=request.data)
 
     # Validate the data
@@ -32,7 +33,7 @@ def register(request):
         logger.info('user created')
         # Then we get a token for the created user.
         # This could be done differently
-        r = requests.post(
+        req = requests.post(
             f'{OAUTH_SERVER_URL}/o/token/',
             data={
                 'grant_type': 'password',
@@ -42,7 +43,7 @@ def register(request):
                 'client_secret': CLIENT_SECRET,
             },
         )
-        return Response(r.json())
+        return Response(req.json())
     logger.info('Serializer is not valid')
     return Response(serializer.errors)
 
@@ -54,7 +55,7 @@ def token(request):
     Gets tokens with username and password. Input should be in the format:
     {"username": "username", "password": "1234abcd"}
     """
-    r = requests.post(
+    req = requests.post(
         f'{OAUTH_SERVER_URL}/o/token/',
         data={
             'grant_type': 'password',
@@ -64,7 +65,7 @@ def token(request):
             'client_secret': CLIENT_SECRET,
         },
     )
-    return Response(r.json())
+    return Response(req.json())
 
 
 @api_view(['POST'])
@@ -74,7 +75,7 @@ def refresh_token(request):
     Registers user to the server. Input should be in the format:
     {"refresh_token": "<token>"}
     """
-    r = requests.post(
+    req = requests.post(
         f'{OAUTH_SERVER_URL}/o/token/',
         data={
             'grant_type': 'refresh_token',
@@ -83,7 +84,7 @@ def refresh_token(request):
             'client_secret': CLIENT_SECRET,
         },
     )
-    return Response(r.json())
+    return Response(req.json())
 
 
 @api_view(['POST'])
@@ -93,7 +94,7 @@ def revoke_token(request):
     Method to revoke tokens.
     {"token": "<token>"}
     """
-    r = requests.post(
+    req = requests.post(
         f'{OAUTH_SERVER_URL}/o/revoke_token/',
         data={
             'token': request.data['token'],
@@ -102,8 +103,8 @@ def revoke_token(request):
         },
     )
     # If it goes well return sucess message (would be empty otherwise)
-    if r.status_code == requests.codes.ok:
-        return Response({'message': 'token revoked'}, r.status_code)
+    if req.status_code == requests.codes.ok:
+        return Response({'message': 'token revoked'}, req.status_code)
 
     # Return the error if it goes badly
-    return Response(r.json(), r.status_code)
+    return Response(req.json(), req.status_code)
