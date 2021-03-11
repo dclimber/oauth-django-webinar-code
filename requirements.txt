@@ -1,0 +1,8 @@
+django-rest-framework
+django-oauth-toolkit
+pytest-django
+pytest-cov
+pytest-sugar
+pytest-icdiff
+ipython
+python-decouple
