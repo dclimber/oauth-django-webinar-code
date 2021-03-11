@@ -147,3 +147,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'oauth2_provider.backends.OAuth2Backend',
 )
+
+
+LOGIN_URL = '/admin/login/'
