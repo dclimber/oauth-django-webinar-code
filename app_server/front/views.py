@@ -47,6 +47,20 @@ def callback(request):
     return redirect('index')
 
 
+@require_GET
+def logout(request):
+    token = request.session.get('webinar_access_token')
+    if token is not None:
+        requests.post(
+            get_full_url(request, 'revoke-token'),
+            data={
+                'token': token,
+            }
+        )
+        request.session.pop('webinar_access_token', None)
+    return redirect('index')
+
+
 @require_POST
 def workhorse(request):
     pass
