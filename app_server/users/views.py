@@ -39,25 +39,6 @@ def token(request):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def refresh_token(request):
-    """
-    Registers user to the server. Input should be in the format:
-    {"refresh_token": "<token>"}
-    """
-    req = requests.post(
-        f'{OAUTH_SERVER_URL}/o/token/',
-        data={
-            'grant_type': 'refresh_token',
-            'refresh_token': request.data['refresh_token'],
-            'client_id': CLIENT_ID,
-            'client_secret': CLIENT_SECRET,
-        },
-    )
-    return Response(req.json())
-
-
-@api_view(['POST'])
-@permission_classes([AllowAny])
 def revoke_token(request):
     """
     Method to revoke tokens.
