@@ -1,3 +1,5 @@
+import requests
+
 from django.conf import settings
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_GET, require_POST
@@ -24,6 +26,24 @@ def index(request):
 
 @require_GET
 def callback(request):
+    # clear stored auth code
+    request.session.pop('webinar_auth_code', None)
+    # get auth code sent from Authorization server
+    code = request.GET.get('code')
+    if code is not None:
+        # save it in the session
+        request.session['webinar_auth_code'] = code
+        resp = requests.post(
+            get_full_url(request, 'get-token'),
+            data={
+                'code': code,
+            }
+        )
+        resp_data = resp.json()
+        if 'access_token' in resp_data:
+            # delete auth code, as it is no longer needed
+            request.session.pop('webinar_auth_code', None)
+            request.session['webinar_access_token'] = resp_data['access_token']
     return redirect('index')
 
 
