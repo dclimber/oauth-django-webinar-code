@@ -1,0 +1,20 @@
+{% for field in form %}
+{% if field.widget_type == 'radioselect' %}
+<div class="form-group">
+  <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+  {% for radio in field %}
+  <div class="custom-control custom-radio custom-control-inline">
+    {{ radio.tag }}
+    <label class="custom-control-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+<div class="form-group">
+  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+  {{ field }}
+</div>
+{% endif %}
+
+{% endfor %}

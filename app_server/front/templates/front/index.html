@@ -26,8 +26,27 @@
                   <a href="{{ auth_url }}" class="btn btn-primary">Зарегистрироваться на Auth+Resource сервере</a>
                 </div>
                 {% else %}
-                <div class="text-center">
-                  <a href="{% url 'logout' %}">Отозвать токен, то бишь «выйти»</a>
+                <div class="text-center py-3">
+                  <a href="{% url 'logout' %}" class="btn btn-danger">Отозвать токен, то бишь «выйти»</a>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <h4>Ввод данных:</h4>
+                    <form id="api_form" action="{% url 'workhorse' %}">
+                      {% csrf_token %}
+                      <div id="form_fields">
+                        {% include 'front/_form_fields.html' with form=form %}
+                      </div>
+
+                      <div class="form-group text-right">
+                        <input type="submit" value="Послать запрос" class="btn btn-primary">
+                      </div>
+                    </form>
+                  </div>
+                  <div class="col-6">
+                    <h4>Вывод данных:</h4>
+                    <textarea class="form-control" name="output_code" id="output_code" rows="13" disabled>Отправьте запрос, чтобы тут получить ответ.</textarea>
+                  </div>
                 </div>
                 {% endif %}
 
@@ -42,6 +61,37 @@
 
   <script src="{% static 'front/jquery-3.5.1/jquery-3.5.1.min.js' %}"></script>
   <script src="{% static 'front/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <script>
+    $(document).ready(function() {
+      let form = $("#api_form"); // get our form
+      form.on('submit', (event) => { // add event handler to it
+        event.preventDefault(); // prevent default action 
+        let data = form.serialize(); // prepare data
+        let url = form.attr('action'); // grab action url
+        // send ajax POST request to our api-server
+        $.ajax({
+          data: data,
+          type: "POST",
+          url: url,
+          success: (response) => {
+            // populate output code with if all went well
+            $("#output_code").html(JSON.stringify(response.data));
+          },
+          error: (response) => {
+            if ("form" in response.responseJSON.data === true) {
+              // show form errors
+              $("#form_fields").html(response.responseJSON.data.form);
+            } else {
+              // output error
+              $("#output_code").html(JSON.stringify(response.responseJSON.data));
+            }
+          }
+        });
+        return false;
+      });
+    });
+  </script>
 
 </body>
 
