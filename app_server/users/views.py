@@ -7,6 +7,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from core.utils import get_full_url
+
 CLIENT_ID = settings.CLIENT_ID
 CLIENT_SECRET = settings.CLIENT_SECRET
 OAUTH_SERVER_URL = settings.OAUTH_SERVER_URL
@@ -18,20 +20,21 @@ logger = logging.getLogger('django.server')
 @permission_classes([AllowAny])
 def token(request):
     """
-    Gets tokens with username and password. Input should be in the format:
-    {"username": "username", "password": "1234abcd"}
+    Gets token with auth code. Input should be in the format:
+    {"code": "code"}
     """
-    req = requests.post(
+    redir_url = get_full_url(request, 'callback')
+    resp = requests.post(
         f'{OAUTH_SERVER_URL}/o/token/',
         data={
-            'grant_type': 'password',
-            'username': request.data['username'],
-            'password': request.data['password'],
+            'grant_type': 'authorization_code',
+            'redirect_uri': redir_url,
+            'code': request.data['code'],
             'client_id': CLIENT_ID,
             'client_secret': CLIENT_SECRET,
         },
     )
-    return Response(req.json())
+    return Response(resp.json())
 
 
 @api_view(['POST'])
