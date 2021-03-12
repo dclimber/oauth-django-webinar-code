@@ -7,45 +7,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from .serializers import CreateUserSerializer
-
 CLIENT_ID = settings.CLIENT_ID
 CLIENT_SECRET = settings.CLIENT_SECRET
 OAUTH_SERVER_URL = settings.OAUTH_SERVER_URL
 
 logger = logging.getLogger('django.server')
-
-
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def register(request):
-    """
-    Registers user to the server. Input should be in the format:
-    {"username": "username", "password": "1234abcd"}
-    """
-    # Put the data from the request into the serializer
-    serializer = CreateUserSerializer(data=request.data)
-
-    # Validate the data
-    if serializer.is_valid():
-        # If it is valid, save the data (creates a user).
-        serializer.save()
-        logger.info('user created')
-        # Then we get a token for the created user.
-        # This could be done differently
-        req = requests.post(
-            f'{OAUTH_SERVER_URL}/o/token/',
-            data={
-                'grant_type': 'password',
-                'username': request.data['username'],
-                'password': request.data['password'],
-                'client_id': CLIENT_ID,
-                'client_secret': CLIENT_SECRET,
-            },
-        )
-        return Response(req.json())
-    logger.info('Serializer is not valid')
-    return Response(serializer.errors)
 
 
 @api_view(['POST'])
