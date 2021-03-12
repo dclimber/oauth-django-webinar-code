@@ -2,16 +2,16 @@ import logging
 
 import requests
 
-from decouple import config
+from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from .serializers import CreateUserSerializer
 
-CLIENT_ID = config('CLIENT_ID')
-CLIENT_SECRET = config('CLIENT_SECRET')
-OAUTH_SERVER_URL = config('OAUTH_SERVER_URL')
+CLIENT_ID = settings.CLIENT_ID
+CLIENT_SECRET = settings.CLIENT_SECRET
+OAUTH_SERVER_URL = settings.OAUTH_SERVER_URL
 
 logger = logging.getLogger('django.server')
 
