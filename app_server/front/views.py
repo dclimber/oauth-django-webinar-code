@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_POST
 
 
 def index(request):
@@ -11,3 +11,8 @@ def index(request):
 @require_GET
 def callback(request):
     return redirect('index')
+
+
+@require_POST
+def workhorse(request):
+    pass
