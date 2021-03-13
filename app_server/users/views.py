@@ -40,7 +40,7 @@ def revoke_token(request):
     Method to revoke tokens.
     {"token": "<token>"}
     """
-    req = requests.post(
+    resp = requests.post(
         f'{OAUTH_SERVER_URL}/o/revoke_token/',
         data={
             'token': request.data['token'],
@@ -49,8 +49,8 @@ def revoke_token(request):
         },
     )
     # If it goes well return sucess message (would be empty otherwise)
-    if req.status_code == requests.codes.ok:
-        return Response({'message': 'token revoked'}, req.status_code)
+    if resp.status_code == requests.codes.ok:
+        return Response({'message': 'token revoked'}, resp.status_code)
 
     # Return the error if it goes badly
-    return Response(req.json(), req.status_code)
+    return Response(resp.json(), resp.status_code)
