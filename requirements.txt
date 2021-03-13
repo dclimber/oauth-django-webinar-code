@@ -6,3 +6,4 @@ pytest-sugar
 pytest-icdiff
 ipython
 python-decouple
+django-environ
