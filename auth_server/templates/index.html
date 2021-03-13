@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Сервер ресурсов и авторизации | Webinar Cohort 13</title>
+
+</head>
+
+<body>
+  <main>
+    <h1>Сервер ресурсов и авторизации</h1>
+    <ul>
+      <li><a href="{% url 'admin:index' %}">{% url 'admin:index' %}</a></li>
+      <li><a href="{% url 'oauth2_provider:list' %}">{% url 'oauth2_provider:list' %}</a></li>
+      <li><a href="{% url 'oauth2_provider:authorized-token-list' %}">{% url 'oauth2_provider:authorized-token-list' %}</a></li>
+      <li><a href="{% url 'api-root' %}">{% url 'api-root' %}</a></li>
+    </ul>
+  </main>
+
+</body>
+
+</html>
