@@ -1,5 +1,3 @@
-import logging
-
 import requests
 
 from django.conf import settings
@@ -12,8 +10,6 @@ from core.utils import get_full_url
 CLIENT_ID = settings.CLIENT_ID
 CLIENT_SECRET = settings.CLIENT_SECRET
 OAUTH_SERVER_URL = settings.OAUTH_SERVER_URL
-
-logger = logging.getLogger('django.server')
 
 
 @api_view(['POST'])
